@@ -193,7 +193,8 @@ class Breakpoint extends PureComponent<Props> {
 }
 
 const mapStateToProps = state => ({
-  breakpoints: getBreakpoints(state),
+  // / TODO check for mutation
+  breakpoints: Object.values(getBreakpoints(state)),
   frame: getTopFrame(state),
   selectedSource: getSelectedSource(state)
 });

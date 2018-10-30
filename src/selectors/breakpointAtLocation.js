@@ -23,7 +23,9 @@ function getLocation(bp, selectedSource) {
 function getBreakpointsForSource(state: OuterState, selectedSource: Source) {
   const breakpoints = getBreakpoints(state);
 
-  return breakpoints.filter(bp => {
+  // /TODO check for mutatation
+  // / return breakpoints.filter(bp => {
+  return Object.values(breakpoints).filter(bp => {
     const location = getLocation(bp, selectedSource);
     return location.sourceId === selectedSource.id;
   });

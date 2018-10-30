@@ -36,10 +36,10 @@ class Breakpoints extends Component<Props> {
     if (!selectedSource || !breakpoints || selectedSource.isBlackBoxed) {
       return null;
     }
-
+    // / {/* breakpoints.valueSeq().map(bp => { */}
     return (
       <div>
-        {breakpoints.valueSeq().map(bp => {
+        {Object.values(breakpoints).map(bp => {
           return (
             <Breakpoint
               key={makeLocationId(bp.location)}

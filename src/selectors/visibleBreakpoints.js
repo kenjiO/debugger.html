@@ -52,7 +52,8 @@ export const getVisibleBreakpoints = createSelector(
       return null;
     }
 
-    return breakpoints
+    // //TODO check for mutation
+    return Object.values(breakpoints)
       .filter(bp => isVisible(bp, selectedSource))
       .map(bp => formatBreakpoint(bp, selectedSource));
   }

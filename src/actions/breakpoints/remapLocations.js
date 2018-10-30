@@ -12,6 +12,7 @@ export default function remapLocations(
   sourceId: string,
   sourceMaps: Object
 ) {
+  // TODO check breakpoints type
   const sourceBreakpoints: BreakpointsMap = breakpoints.map(
     async breakpoint => {
       if (breakpoint.location.sourceId !== sourceId) {

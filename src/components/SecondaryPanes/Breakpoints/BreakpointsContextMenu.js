@@ -74,6 +74,7 @@ export default function showContextMenu(props) {
     "breakpointMenuItem.addCondition2.accesskey"
   );
 
+  // /TODO check breakpoints type
   const otherBreakpoints = breakpoints.filter(b => b !== breakpoint);
   const enabledBreakpoints = breakpoints.filter(b => !b.disabled);
   const disabledBreakpoints = breakpoints.filter(b => b.disabled);

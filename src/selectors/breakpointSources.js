@@ -21,17 +21,28 @@ function getBreakpointsForSource(
   source: Source,
   breakpoints: BreakpointsMap
 ): Breakpoint[] {
-  const bpList = breakpoints.valueSeq();
+  // / const bpList = breakpoints.valueSeq();
+  // /
+  // / return bpList
+  // /   .filter(
+  // /     bp =>
+  // /       bp.location.sourceId == source.id &&
+  // /       !bp.hidden &&
+  // /       (bp.text || bp.originalText || bp.condition || bp.disabled)
+  // /   )
+  // /   .sortBy(bp => bp.location.line)
+  // /   .toJS();
 
-  return bpList
+  // /TODO check if breakpointsArray needs to be cloned
+  const breakpointsArray = Object.values(breakpoints);
+  return breakpointsArray
     .filter(
       bp =>
         bp.location.sourceId == source.id &&
         !bp.hidden &&
         (bp.text || bp.originalText || bp.condition || bp.disabled)
     )
-    .sortBy(bp => bp.location.line)
-    .toJS();
+    .sort((a, b) => a.location.line - b.location.line);
 }
 
 function findBreakpointSources(
@@ -39,10 +50,11 @@ function findBreakpointSources(
   breakpoints: BreakpointsMap
 ): Source[] {
   const sourceIds: string[] = uniq(
-    breakpoints
-      .valueSeq()
-      .map(bp => bp.location.sourceId)
-      .toJS()
+    // / breakpoints
+    // /   .valueSeq()
+    // /   .map(bp => bp.location.sourceId)
+    // /   .toJS()
+    Object.values(breakpoints).map(bp => bp.location.sourceId)
   );
 
   const breakpointSources = sourceIds
