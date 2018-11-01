@@ -314,7 +314,7 @@ export function getBreakpoints(state: OuterState) {
 export function getBreakpoint(
   state: OuterState,
   location: Location
-): Breakpoint {
+): ?Breakpoint {
   // / const breakpoints = getBreakpoints(state);
   // / return breakpoints.get(makeLocationId(location));
   const locationId = makeLocationId(location);
@@ -326,7 +326,11 @@ export function getBreakpoint(
 
 export function getBreakpointsDisabled(state: OuterState): boolean {
   // / return state.breakpoints.breakpoints.every(x => x.disabled);
-  const breakpoints = Object.values(state.breakpoints.breakpoints);
+  const breakpoints = [];
+  Object.keys(state.breakpoints.breakpoints).forEach(function(key: string) {
+    breakpoints.push(state.breakpoints.breakpoints[key]);
+  });
+  // const breakpoints = Object.values(state.breakpoints.breakpoints);
   return breakpoints.every(breakpoint => breakpoint.disabled);
 }
 
@@ -337,14 +341,19 @@ export function getBreakpointsLoading(state: OuterState) {
   // /   .filter(bp => bp.loading)
   // /   .first();
   // / return breakpoints.size > 0 && isLoading;
-  const breakpoints = Object.values(state.breakpoints.breakpoints);
+
+  // const breakpoints = Object.values(state.breakpoints.breakpoints);
+  const breakpoints = [];
+  Object.keys(state.breakpoints.breakpoints).forEach(function(key: string) {
+    breakpoints.push(state.breakpoints.breakpoints[key]);
+  });
   return breakpoints.some(breakpoint => breakpoint.loading);
 }
 
-export function getBreakpointsForSource(state: OuterState, sourceId: string) {
+export function getBreakpointsForSource(state: OuterState, sourceId: string) : Breakpoint[] {
   if (!sourceId) {
     // /return I.Map();
-    return {};
+    return [];
   }
 
   const isGeneratedSource = isGeneratedId(sourceId);
@@ -356,7 +365,12 @@ export function getBreakpointsForSource(state: OuterState, sourceId: string) {
   // /   return location.sourceId === sourceId;
   // / });
 
-  const breakpoints = Object.values(state.breakpoints.breakpoints);
+  //const breakpoints = Object.values(state.breakpoints.breakpoints);
+  const breakpoints = [];
+  Object.keys(state.breakpoints.breakpoints).forEach(function(key: string) {
+    breakpoints.push(state.breakpoints.breakpoints[key]);
+  });
+
   return breakpoints.slice().filter(bp => {
     const location = isGeneratedSource
       ? bp.generatedLocation || bp.location
@@ -372,11 +386,11 @@ export function getBreakpointForLine(
 ): ?Breakpoint {
   if (!sourceId) {
     // /return I.Map();
-    return {};
+    return undefined;
   }
   const breakpoints = getBreakpointsForSource(state, sourceId);
   // / return breakpoints.find(breakpoint => breakpoint.location.line === line);
-  const match = Object.values(breakpoints).find(
+  const match = breakpoints.find(
     bp => bp.location.line === line
   );
   if (match) {
@@ -389,8 +403,14 @@ export function getHiddenBreakpoint(state: OuterState) {
   // /   .valueSeq()
   // /   .filter(breakpoint => breakpoint.hidden)
   // /   .first();
-  const breakpoints = state.breakpoints.breakpoints;
-  const match = Object.values(breakpoints).find(bp => bp.hidden);
+
+  //const breakpoints = state.breakpoints.breakpoints;
+  const breakpoints = [];
+  Object.keys(state.breakpoints.breakpoints).forEach(function(key: string) {
+    breakpoints.push(state.breakpoints.breakpoints[key]);
+  });
+
+  const match = breakpoints.find(bp => bp.hidden);
   if (match) {
     return { ...match };
   }
