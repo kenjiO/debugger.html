@@ -23,7 +23,8 @@ import type { UIState } from "./ui";
 
 export type State = {
   ast: Record<ASTState>,
-  breakpoints: Record<BreakpointsState>,
+  ///breakpoints: Record<BreakpointsState>,
+  breakpoints: BreakpointsState,
   expressions: Record<ExpressionState>,
   fileSearch: Record<FileSearchState>,
   pause: PauseState,

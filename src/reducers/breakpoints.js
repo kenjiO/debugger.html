@@ -53,7 +53,7 @@ function update(
   ///state: Record<BreakpointsState> = initialBreakpointsState(),
   state: BreakpointsState = initialBreakpointsState(),
   action: Action
-) {
+): BreakpointsState {
   switch (action.type) {
     case "ADD_BREAKPOINT": {
       return addBreakpoint(state, action);
@@ -189,7 +189,7 @@ function unsetBreakpoint(state, locationId) {
   return newState;
 }
 
-function addBreakpoint(state, action) {
+function addBreakpoint(state, action): BreakpointsState {
   if (action.status === "start" && action.breakpoint) {
     const { breakpoint } = action;
     const locationId = makeLocationId(breakpoint.location);
@@ -213,7 +213,7 @@ function addBreakpoint(state, action) {
   return state;
 }
 
-function syncBreakpoint(state, data) {
+function syncBreakpoint(state, data): BreakpointsState {
   const { breakpoint, previousLocation } = data;
 
   if (previousLocation) {
@@ -232,14 +232,14 @@ function syncBreakpoint(state, data) {
   return setBreakpoint(state, locationId, breakpoint);
 }
 
-function updateBreakpoint(state, action) {
+function updateBreakpoint(state, action): BreakpointsState {
   const { breakpoint } = action;
   const locationId = makeLocationId(breakpoint.location);
   ///return state.setIn(["breakpoints", locationId], breakpoint);
   return setBreakpoint(state, locationId, breakpoint);
 }
 
-function updateAllBreakpoints(state, action) {
+function updateAllBreakpoints(state, action): BreakpointsState {
   const { breakpoints } = action;
   state = {
     ...state,
@@ -253,7 +253,7 @@ function updateAllBreakpoints(state, action) {
   return state;
 }
 
-function remapBreakpoints(state, action) {
+function remapBreakpoints(state, action): BreakpointsState {
   const breakpoints = action.breakpoints.reduce(
     (updatedBreakpoints, breakpoint) => {
       const locationId = makeLocationId(breakpoint.location);
@@ -266,7 +266,7 @@ function remapBreakpoints(state, action) {
   return { ...state, breakpoints: breakpoints };
 }
 
-function removeBreakpoint(state, action) {
+function removeBreakpoint(state, action): BreakpointsState {
   const { breakpoint } = action;
   const id = makeLocationId(breakpoint.location);
   ///return state.deleteIn(["breakpoints", id]);
@@ -277,8 +277,7 @@ function removeBreakpoint(state, action) {
 // TODO: these functions should be moved out of the reducer
 
 ///type OuterState = { breakpoints: Record<BreakpointsState> };
-//TODO change any to BreakpointsState
-type OuterState = { breakpoints: any };
+type OuterState = { breakpoints: BreakpointsState };
 
 export function getBreakpoints(state: OuterState) {
   //TODO make this immutable?
@@ -301,7 +300,7 @@ export function getBreakpointsDisabled(state: OuterState): boolean {
   return breakpoints.every(breakpoint => breakpoint.disabled);
 }
 
-export function getBreakpointsLoading(state: OuterState) {
+export function getBreakpointsLoading(state: OuterState): boolean {
   ///const breakpoints = getBreakpoints(state);
   ///const isLoading = !!breakpoints
   ///  .valueSeq()
@@ -312,7 +311,7 @@ export function getBreakpointsLoading(state: OuterState) {
   return breakpoints.size > 0 && isLoading;
 }
 
-export function getBreakpointsForSource(state: OuterState, sourceId: string) {
+export function getBreakpointsForSource(state: OuterState, sourceId: string): BreakpointsMap {
   if (!sourceId) {
     ///return I.Map();
     return {};
@@ -356,7 +355,7 @@ export function getBreakpointForLine(
   return breakpoints.find(breakpoint => breakpoint.location.line === line);
 }
 
-export function getHiddenBreakpoint(state: OuterState) {
+export function getHiddenBreakpoint(state: OuterState): ?Breakpoint {
   // return getBreakpoints(state)
   //   .valueSeq()
   //   .filter(breakpoint => breakpoint.hidden)
@@ -366,7 +365,7 @@ export function getHiddenBreakpoint(state: OuterState) {
   return breakpoints.find(bp => bp.hidden);
 }
 
-export function getHiddenBreakpointLocation(state: OuterState) {
+export function getHiddenBreakpointLocation(state: OuterState): ?Location {
   const hiddenBreakpoint = getHiddenBreakpoint(state);
   if (!hiddenBreakpoint) {
     return null;

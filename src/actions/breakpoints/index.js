@@ -113,12 +113,14 @@ export function disableBreakpoint(location: Location) {
  */
 export function toggleAllBreakpoints(shouldDisableBreakpoints: boolean) {
   return async ({ dispatch, getState, client }: ThunkArgs) => {
-    //TODO check if breakpoints is correct type
-    const breakpoints = getBreakpoints(getState());
+    ///const breakpoints = getBreakpoints(getState());
+    const breakpointsMap = getBreakpoints(getState());
+    const breakpoints = (Object.values(breakpointsMap): any);
 
     const modifiedBreakpoints = [];
 
-    for (const [, breakpoint] of breakpoints) {
+    ///for (const [, breakpoint] of breakpoints) {
+    for (const breakpoint of breakpoints) {
       if (shouldDisableBreakpoints) {
         await client.removeBreakpoint(breakpoint.generatedLocation);
         const newBreakpoint: Breakpoint = { ...breakpoint, disabled: true };
@@ -214,7 +216,9 @@ export function removeBreakpoints(breakpoints: BreakpointsMap) {
 
 export function remapBreakpoints(sourceId: string) {
   return async ({ dispatch, getState, sourceMaps }: ThunkArgs) => {
-    const breakpoints = getBreakpoints(getState());
+    ///const breakpoints = getBreakpoints(getState());
+    const breakpointsMap = getBreakpoints(getState());
+    const breakpoints = (Object.values(breakpointsMap): any);
     const newBreakpoints = await remapLocations(
       breakpoints,
       sourceId,
