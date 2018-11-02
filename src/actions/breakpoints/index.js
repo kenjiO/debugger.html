@@ -113,11 +113,12 @@ export function disableBreakpoint(location: Location) {
  */
 export function toggleAllBreakpoints(shouldDisableBreakpoints: boolean) {
   return async ({ dispatch, getState, client }: ThunkArgs) => {
-    const breakpoints = getBreakpoints(getState());
+    const breakpointsMap = getBreakpoints(getState());
+    const breakpoints = (Object.values(breakpointsMap): any);
 
     const modifiedBreakpoints = [];
 
-    for (const [, breakpoint] of breakpoints) {
+    for (const breakpoint of breakpoints) {
       if (shouldDisableBreakpoints) {
         await client.removeBreakpoint(breakpoint.generatedLocation);
         const newBreakpoint: Breakpoint = { ...breakpoint, disabled: true };
@@ -157,15 +158,11 @@ export function toggleBreakpoints(
   breakpoints: BreakpointsMap
 ) {
   return async ({ dispatch }: ThunkArgs) => {
-    const promises = breakpoints
-      .valueSeq()
-      .toJS()
-      .map(
-        ([, breakpoint]) =>
-          shouldDisableBreakpoints
-            ? dispatch(disableBreakpoint(breakpoint.location))
-            : dispatch(enableBreakpoint(breakpoint.location))
-      );
+    const promises = (Object.values(breakpoints): any).map(breakpoint =>
+      shouldDisableBreakpoints
+        ? dispatch(disableBreakpoint(breakpoint.location))
+        : dispatch(enableBreakpoint(breakpoint.location))
+    );
 
     await Promise.all(promises);
   };
@@ -179,9 +176,7 @@ export function toggleBreakpoints(
  */
 export function removeAllBreakpoints() {
   return async ({ dispatch, getState }: ThunkArgs) => {
-    const breakpointList = getBreakpoints(getState())
-      .valueSeq()
-      .toJS();
+    const breakpointList = (Object.values(getBreakpoints(getState())): any);
     return Promise.all(
       breakpointList.map(bp => dispatch(removeBreakpoint(bp.location)))
     );
@@ -196,7 +191,7 @@ export function removeAllBreakpoints() {
  */
 export function removeBreakpoints(breakpoints: BreakpointsMap) {
   return async ({ dispatch }: ThunkArgs) => {
-    const breakpointList = breakpoints.valueSeq().toJS();
+    const breakpointList = (Object.values(breakpoints): any);
     return Promise.all(
       breakpointList.map(bp => dispatch(removeBreakpoint(bp.location)))
     );
@@ -205,7 +200,8 @@ export function removeBreakpoints(breakpoints: BreakpointsMap) {
 
 export function remapBreakpoints(sourceId: string) {
   return async ({ dispatch, getState, sourceMaps }: ThunkArgs) => {
-    const breakpoints = getBreakpoints(getState());
+    const breakpointsMap = getBreakpoints(getState());
+    const breakpoints = (Object.values(breakpointsMap): any);
     const newBreakpoints = await remapLocations(
       breakpoints,
       sourceId,
@@ -322,7 +318,7 @@ export function toggleBreakpointsAtLine(line: number, column?: number) {
     const bps = getBreakpointsAtLine(state, line);
     const isEmptyLine = isEmptyLineInSource(state, line, selectedSource.id);
 
-    if (bps.size === 0 && !isEmptyLine) {
+    if (bps.length === 0 && !isEmptyLine) {
       return dispatch(
         addBreakpoint({
           sourceId: selectedSource.id,

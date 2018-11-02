@@ -119,7 +119,7 @@ class SecondaryPanes extends Component<Props, State> {
     const isIndeterminate =
       !breakpointsDisabled && breakpoints.some(x => x.disabled);
 
-    if (features.skipPausing || breakpoints.size == 0) {
+    if (features.skipPausing || breakpoints.length === 0) {
       return null;
     }
 
@@ -443,7 +443,7 @@ const mapStateToProps = state => ({
   expressions: getExpressions(state),
   extra: getExtra(state),
   hasFrames: !!getTopFrame(state),
-  breakpoints: getBreakpoints(state),
+  breakpoints: Object.values(getBreakpoints(state)),
   breakpointsDisabled: getBreakpointsDisabled(state),
   breakpointsLoading: getBreakpointsLoading(state),
   isWaitingOnBreak: getIsWaitingOnBreak(state),

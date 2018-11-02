@@ -21,7 +21,7 @@ function getBreakpointsForSource(
   source: Source,
   breakpoints: BreakpointsMap
 ): Breakpoint[] {
-  const bpList = breakpoints.valueSeq();
+  const bpList = (Object.values(breakpoints): any)
 
   return bpList
     .filter(
@@ -30,8 +30,7 @@ function getBreakpointsForSource(
         !bp.hidden &&
         (bp.text || bp.originalText || bp.condition || bp.disabled)
     )
-    .sortBy(bp => bp.location.line)
-    .toJS();
+    .sort((a, b) => a.location.line - b.location.line);
 }
 
 function findBreakpointSources(
@@ -39,10 +38,7 @@ function findBreakpointSources(
   breakpoints: BreakpointsMap
 ): Source[] {
   const sourceIds: string[] = uniq(
-    breakpoints
-      .valueSeq()
-      .map(bp => bp.location.sourceId)
-      .toJS()
+    (Object.values(breakpoints): any).map(bp => bp.location.sourceId)
   );
 
   const breakpointSources = sourceIds

@@ -20,10 +20,11 @@ function getLocation(bp, selectedSource) {
     : bp.location;
 }
 
-function getBreakpointsForSource(state: OuterState, selectedSource: Source) {
+function getBreakpointsForSource(state: OuterState, selectedSource: Source): Breakpoint[] {
   const breakpoints = getBreakpoints(state);
 
-  return breakpoints.filter(bp => {
+  //TODO make this immutable?
+  return Object.values(breakpoints).filter(bp => {
     const location = getLocation(bp, selectedSource);
     return location.sourceId === selectedSource.id;
   });

@@ -256,7 +256,7 @@ describe("initializing with disabled pending breakpoints in prefs", () => {
 
     await waitForState(store, state => {
       const bps = selectors.getBreakpointsForSource(state, "bar.js");
-      return bps && bps.size > 0;
+      return bps && Object.values(bps).length > 0;
     });
 
     const bp = selectors.getBreakpointForLine(getState(), "bar.js", 5);
@@ -270,8 +270,8 @@ describe("adding sources", () => {
     const store = createStore(simpleMockThreadClient, loadInitialState());
     const { getState, dispatch } = store;
 
-    let bps = selectors.getBreakpoints(getState());
-    expect(bps.size).toBe(0);
+    let bps = Object.values(selectors.getBreakpoints(getState()));
+    expect(bps.length).toBe(0);
 
     const source = makeSource("bar.js");
     await dispatch(actions.newSource(source));
@@ -279,11 +279,11 @@ describe("adding sources", () => {
 
     await waitForState(
       store,
-      state => selectors.getBreakpoints(state).size > 0
+      state => Object.values(selectors.getBreakpoints(state)).length > 0
     );
 
-    bps = selectors.getBreakpoints(getState());
-    expect(bps.size).toBe(1);
+    bps = Object.values(selectors.getBreakpoints(getState()));
+    expect(bps.length).toBe(1);
   });
 
   it("corresponding breakpoints are added to the original source", async () => {
@@ -301,26 +301,26 @@ describe("adding sources", () => {
 
     const { getState, dispatch } = store;
 
-    let bps = selectors.getBreakpoints(getState());
-    expect(bps.size).toBe(0);
+    let bps = Object.values(selectors.getBreakpoints(getState()));
+    expect(bps.length).toBe(0);
 
     await dispatch(actions.newSource(source));
 
     await waitForState(
       store,
-      state => selectors.getBreakpoints(state).size > 0
+      state => Object.values(selectors.getBreakpoints(state)).length > 0
     );
 
-    bps = selectors.getBreakpoints(getState());
-    expect(bps.size).toBe(1);
+    bps = Object.values(selectors.getBreakpoints(getState()));
+    expect(bps.length).toBe(1);
   });
 
   it("add corresponding breakpoints for multiple sources", async () => {
     const store = createStore(simpleMockThreadClient, loadInitialState());
     const { getState, dispatch } = store;
 
-    let bps = selectors.getBreakpoints(getState());
-    expect(bps.size).toBe(0);
+    let bps = Object.values(selectors.getBreakpoints(getState()));
+    expect(bps.length).toBe(0);
 
     const source1 = makeSource("bar.js");
     const source2 = makeSource("foo.js");
@@ -330,11 +330,11 @@ describe("adding sources", () => {
 
     await waitForState(
       store,
-      state => selectors.getBreakpoints(state).size > 0
+      state => Object.values(selectors.getBreakpoints(state)).length > 0
     );
 
-    bps = selectors.getBreakpoints(getState());
-    expect(bps.size).toBe(1);
+    bps = Object.values(selectors.getBreakpoints(getState()));
+    expect(bps.length).toBe(1);
   });
 });
 

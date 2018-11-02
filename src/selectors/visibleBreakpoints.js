@@ -52,8 +52,9 @@ export const getVisibleBreakpoints = createSelector(
       return null;
     }
 
-    return breakpoints
+    return (Object.values(breakpoints): any)
       .filter(bp => isVisible(bp, selectedSource))
+      //TODO is formatBreakpoint(bp, selectedSource) immutable?
       .map(bp => formatBreakpoint(bp, selectedSource));
   }
 );
