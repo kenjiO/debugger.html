@@ -39,7 +39,8 @@ class Breakpoints extends Component<Props> {
 
     return (
       <div>
-        {breakpoints.valueSeq().map(bp => {
+        {/*** breakpoints.valueSeq().map(bp => { ***/}
+        {(Object.values(breakpoints): any).map(bp => {
           return (
             <Breakpoint
               key={makeLocationId(bp.location)}

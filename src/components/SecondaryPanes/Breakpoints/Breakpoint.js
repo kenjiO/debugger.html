@@ -193,7 +193,9 @@ class Breakpoint extends PureComponent<Props> {
 }
 
 const mapStateToProps = state => ({
-  breakpoints: getBreakpoints(state),
+  ///breakpoints: getBreakpoints(state),
+  //TODO is this immutable?
+  breakpoints: Object.values(getBreakpoints(state)),
   frame: getTopFrame(state),
   selectedSource: getSelectedSource(state)
 });
