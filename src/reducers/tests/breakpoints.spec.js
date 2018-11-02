@@ -14,9 +14,11 @@ import {
 import * as I from "immutable";
 
 function initializeStateWith(data) {
-  const mappedData = I.Map(data);
+  /// const mappedData = I.Map(data);
   const state = initialBreakpointsState();
-  return state.set("breakpoints", mappedData);
+  /// return state.set("breakpoints", mappedData);
+  const stateWithBreakpoints = {...state, breakpoints: data};
+  return stateWithBreakpoints.breakpoints;
 }
 
 describe("Breakpoints Selectors", () => {

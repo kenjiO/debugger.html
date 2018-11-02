@@ -13,8 +13,9 @@ export default function remapLocations(
   sourceMaps: Object
 ) {
   // TODO check breakpoints type
-  const sourceBreakpoints: BreakpointsMap = breakpoints.map(
-    async breakpoint => {
+  ///const sourceBreakpoints: BreakpointsMap = breakpoints.map(
+  const sourceBreakpoints = breakpoints.map(
+      async breakpoint => {
       if (breakpoint.location.sourceId !== sourceId) {
         return breakpoint;
       }
@@ -25,5 +26,6 @@ export default function remapLocations(
     }
   );
 
-  return Promise.all(sourceBreakpoints.valueSeq());
+  /// return Promise.all(sourceBreakpoints.valueSeq());
+  return Promise.all(sourceBreakpoints);
 }

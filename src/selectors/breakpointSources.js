@@ -34,8 +34,7 @@ function getBreakpointsForSource(
   // /   .toJS();
 
   // /TODO check if breakpointsArray needs to be cloned
-  const breakpointsArray = Object.values(breakpoints);
-  return breakpointsArray
+  return (Object.values(breakpoints): any)
     .filter(
       bp =>
         bp.location.sourceId == source.id &&
@@ -54,7 +53,7 @@ function findBreakpointSources(
     // /   .valueSeq()
     // /   .map(bp => bp.location.sourceId)
     // /   .toJS()
-    Object.values(breakpoints).map(bp => bp.location.sourceId)
+    (Object.values(breakpoints): any).map(bp => bp.location.sourceId)
   );
 
   const breakpointSources = sourceIds

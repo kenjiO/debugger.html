@@ -162,7 +162,7 @@ export function toggleBreakpoints(
     // / const promises = breakpoints
     // /  .valueSeq()
     // /  .toJS()
-    const promises = Object.values(breakpoints).map(
+    const promises = (Object.values(breakpoints): any).map(
       // / ([, breakpoint]) =>
       breakpoint =>
         shouldDisableBreakpoints
@@ -182,12 +182,12 @@ export function toggleBreakpoints(
  */
 export function removeAllBreakpoints() {
   return async ({ dispatch, getState }: ThunkArgs) => {
-    // / const breakpointList = getBreakpoints(getState())
+    const breakpointList = getBreakpoints(getState())
     // /   .valueSeq()
     // /   .toJS();
-    const breakpointList = Object.values(getBreakpoints(getState()));
+    const breakpointArray = (Object.values(breakpointList): any);
     return Promise.all(
-      breakpointList.map(bp => dispatch(removeBreakpoint(bp.location)))
+      breakpointArray.map(bp => dispatch(removeBreakpoint(bp.location)))
     );
   };
 }
@@ -201,7 +201,7 @@ export function removeAllBreakpoints() {
 export function removeBreakpoints(breakpoints: BreakpointsMap) {
   return async ({ dispatch }: ThunkArgs) => {
     // /const breakpointList = breakpoints.valueSeq().toJS();
-    const breakpointList = Object.values(breakpoints);
+    const breakpointList = (Object.values(breakpoints): any);
     return Promise.all(
       breakpointList.map(bp => dispatch(removeBreakpoint(bp.location)))
     );
@@ -211,11 +211,13 @@ export function removeBreakpoints(breakpoints: BreakpointsMap) {
 export function remapBreakpoints(sourceId: string) {
   return async ({ dispatch, getState, sourceMaps }: ThunkArgs) => {
     const breakpoints = getBreakpoints(getState());
-    const newBreakpoints = await remapLocations(
-      breakpoints,
-      sourceId,
-      sourceMaps
-    );
+    const newBreakpoints: Breakpoint[] = [];
+    // TODO FIXME!
+    // const newBreakpoints = await remapLocations(
+    //   (Object.values(breakpoints): any),
+    //   sourceId,
+    //   sourceMaps
+    // );
 
     return dispatch(
       ({
