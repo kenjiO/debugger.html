@@ -4,6 +4,20 @@
 
 import { buildMenu, showMenu } from "devtools-contextmenu";
 
+/**
+ * Check if a Breakpoint type object and a FormattedBreakpoint type object
+ * are the same breakpoint
+ */
+function checkIfSameBreakpoint(breakpoint, formattedBreakpoint) {
+  const location1 = breakpoint.location;
+  const location2 = formattedBreakpoint.selectedLocation;
+  return (
+    location1.sourceId === location2.sourceId &&
+    location1.line === location2.line &&
+    location1.column === location2.column
+  );
+}
+
 export default function showContextMenu(props) {
   const {
     removeBreakpoint,
@@ -74,14 +88,16 @@ export default function showContextMenu(props) {
     "breakpointMenuItem.addCondition2.accesskey"
   );
 
-  const otherBreakpoints = breakpoints.filter(b => b !== breakpoint);
+  const otherBreakpoints = breakpoints.filter(
+    b => !checkIfSameBreakpoint(b, breakpoint)
+  );
   const enabledBreakpoints = breakpoints.filter(b => !b.disabled);
   const disabledBreakpoints = breakpoints.filter(b => b.disabled);
   const otherEnabledBreakpoints = breakpoints.filter(
-    b => !b.disabled && b !== breakpoint
+    b => !b.disabled && !checkIfSameBreakpoint(b, breakpoint)
   );
   const otherDisabledBreakpoints = breakpoints.filter(
-    b => b.disabled && b !== breakpoint
+    b => b.disabled && !checkIfSameBreakpoint(b, breakpoint)
   );
 
   const deleteSelfItem = {
